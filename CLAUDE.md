@@ -85,4 +85,5 @@ SearchPage 集成：**「搜下载站」复选框 `pan_search_check`（默认勾
 - **测试**：`tests/test_core.py` 用 `sys.modules` 注入 mock Qt 模块跑无 GUI 逻辑；`_make_fake_module`/`_AnyCls` 可复用（如脚本里 `import tests.test_core as tc` 后即可导入后端模块）；新逻辑（如 `_is_placeholder_name`/`_match_installed_records`/`_sanitize_record_name`）要有对应用例
 - 仓库无 `.cursorrules`/Copilot 规则；README（中英文）由 v1.8 重写，含三步入库教程（初始化→搜索入库→Steam 开玩）
 - **打包注意**：`build_exe.py`/`StarrySkyInstall.spec` 含已不存在的 hidden-import/数据目录引用（`backend.authorizer_backend`、`backend.cw_extractor_core`、`backend/GBE_Patch`、`backend/GreenLuma_2026_1.7.4-Steam006`），打包异常先查此处；`Resource.json`（顶层的资源站数据）目前无代码引用
+- **⚠️ 别删 `build_exe.py` 里的 `EXCLUDES` 排除列表**：`httpx` 顶层 try 导入 `httpx._main` → `rich` → `rich.pretty` 里的 `from IPython.core.formatters import BaseFormatter`（仅 IPython 环境下才执行的惰性导入），PyInstaller 静态分析会顺这条链把本机装的整个科学计算/ML 栈（torch/transformers/diffusers/matplotlib/gradio…）打进包。本机 2026-08-26 装上这些包后 exe 从 124MB 暴涨到 426MB，加排除后 86MB。这些导入点都有 try/except 保护、项目从不使用，排除是安全的。**若 exe 再次异常变大**：用 `build/StarrySkyInstall/xref-StarrySkyInstall.html`（PyInstaller 反向引用图）从异常包向上追溯导入链，定位真凶
 - **GitHub 直连不稳定**：fetch/push 失败先走 `-c http.proxy=http://127.0.0.1:7890`；`gh release` 上传偶发 EOF 需重试

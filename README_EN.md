@@ -1,12 +1,12 @@
 <div align="center">
 
-# ⚡ Aurora Install · 极光入库
+# ⚡ StarrySky Install · 星空入库
 
 Steam game library tool — **Find any game, unlock with one click, play right away**
 
 Modern Fluent Design · Multiple unlockers · Whole-internet resource search
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-4B8BBE) ![License](https://img.shields.io/badge/License-MIT-green) ![Platform](https://img.shields.io/badge/Windows-11%20%2F%2010-0078D6) ![Version](https://img.shields.io/badge/Release-v1.8-blue)
+![Python](https://img.shields.io/badge/Python-3.8%2B-4B8BBE) ![License](https://img.shields.io/badge/License-MIT-green) ![Platform](https://img.shields.io/badge/Windows-11%20%2F%2010-0078D6) ![Version](https://img.shields.io/badge/Release-v1.9-blue)
 
 [中文版](./README.md) | **English**
 
@@ -41,7 +41,7 @@ Modern Fluent Design · Multiple unlockers · Whole-internet resource search
 
 ### Option 1: Direct download (Recommended)
 
-Grab `AuroraInstall.exe` from the [Releases](https://github.com/Ker0el/Aurora-install/releases) page and run it. No environment setup needed.
+Grab `StarrySkyInstall.exe` from the [Releases](https://github.com/Ker0el/StarrySky-install/releases) page and run it. No environment setup needed.
 
 ### Option 2: Run manually
 

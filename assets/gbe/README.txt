@@ -12,7 +12,6 @@ GBE (Goldberg Emulator) DLL 放置说明
    steam_api.dll     （32 位游戏用）
 
 4. 把这两个 dll 复制到本目录（assets/gbe/）下：
-   D:\111\Aurora-install\assets\gbe\
    （打包进 exe 后软件会自动从内部读取，无需额外操作）
 
 5. 之后在软件主页点「免 Steam 启动」，选择游戏目录即可。

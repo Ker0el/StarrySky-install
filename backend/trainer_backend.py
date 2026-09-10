@@ -669,7 +669,7 @@ def download_trainer(
         return {"success": False, "path": "", "message": "无法获取下载链接，请检查网络或稍后重试"}
     
     log(f"正在下载: {trainer_name}")
-    tmp_dir = Path(tempfile.gettempdir()) / "AuroraInstallTrainer"
+    tmp_dir = Path(tempfile.gettempdir()) / "StarrySkyInstallTrainer"
     tmp_dir.mkdir(parents=True, exist_ok=True)
 
     try:

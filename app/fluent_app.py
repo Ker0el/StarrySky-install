@@ -1,5 +1,5 @@
 """
-Aurora Install（极光入库）
+StarrySky Install（星空入库）
 使用 PyQt-Fluent-Widgets 框架
 """
 import sys
@@ -175,7 +175,7 @@ def load_language_config():
 # Simple text translation mapping
 TEXTS = {
     "zh_CN": {
-        "app_title": "极光入库",
+        "app_title": "星空入库",
         "home": "主页",
         "search": "搜索入库",
         "settings": "设置",
@@ -325,8 +325,8 @@ TEXTS = {
         "reset_to_default": "重置为默认",
         "about_title": "关于",
         "thanks_title": "鸣谢",
-        "about_text": "Aurora Install - Fluent Design 版本\n\n版本: 1.1\n\n这是一个基于 PyQt6-Fluent-Widgets 的现代化 Steam 游戏解锁工具。\n\n功能特性:\n• Fluent Design 设计风格\n• 支持多种清单源\n• 游戏搜索和入库\n• 已入库游戏管理\n• 主题自定义\n\n项目地址: https://github.com/Ker0el/Aurora-install",
-        "thanks_text": "特别鸣谢\n\n开发者:\n• Aurora Install Team\n\n开源项目:\n• PyQt6 - Qt6 Python 绑定\n• PyQt-Fluent-Widgets - Fluent Design 组件库\n• Cai-install-Web-GUI - 原始项目作者\n• httpx - 异步 HTTP 客户端\n• Game-Cheats-Manager - 修改器数据来源 (https://github.com/dyang886/Game-Cheats-Manager)\n\n清单源提供:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• 清单不求人\n\n社区与联系:\n• GitHub: https://github.com/Ker0el/Aurora-install\n• 感谢所有为本项目做出贡献的开发者和用户！",
+        "about_text": "StarrySky Install - Fluent Design 版本\n\n版本: 1.1\n\n这是一个基于 PyQt6-Fluent-Widgets 的现代化 Steam 游戏解锁工具。\n\n功能特性:\n• Fluent Design 设计风格\n• 支持多种清单源\n• 游戏搜索和入库\n• 已入库游戏管理\n• 主题自定义\n\n项目地址: https://github.com/Ker0el/StarrySky-install",
+        "thanks_text": "特别鸣谢\n\n开发者:\n• StarrySky Install Team\n\n开源项目:\n• PyQt6 - Qt6 Python 绑定\n• PyQt-Fluent-Widgets - Fluent Design 组件库\n• Cai-install-Web-GUI - 原始项目作者\n• httpx - 异步 HTTP 客户端\n• Game-Cheats-Manager - 修改器数据来源 (https://github.com/dyang886/Game-Cheats-Manager)\n\n清单源提供:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• 清单不求人\n\n社区与联系:\n• GitHub: https://github.com/Ker0el/StarrySky-install\n• 感谢所有为本项目做出贡献的开发者和用户！",
         "donate": "捐赠",
         "donate_title": "支持开发者",
         "donate_desc": "如果本项目对你有帮助，欢迎请作者喝杯咖啡 ☕",
@@ -357,7 +357,7 @@ TEXTS = {
         "reinstall_confirm": "AppID {0} 已存在（{1}），仍要重新入库吗？",
     },
     "en_US": {
-        "app_title": "AuroraInstall",
+        "app_title": "StarrySky",
         "home": "Home",
         "search": "Search",
         "settings": "Settings",
@@ -492,8 +492,8 @@ TEXTS = {
         "reset_to_default": "Reset Default",
         "about_title": "About",
         "thanks_title": "Credits",
-        "about_text": "Aurora Install - Fluent Design Version\n\nVersion: 1.1\n\nThis is a modern Steam game unlocking tool based on PyQt6-Fluent-Widgets.\n\nFeatures:\n• Fluent Design style\n• Support for multiple manifest sources\n• Game search and adding\n• Installed games management\n• Theme customization\n\nProject URL: https://github.com/Ker0el/Aurora-install",
-        "thanks_text": "Special Thanks\n\nDevelopers:\n• Aurora Install Team\n\nOpen Source Projects:\n• PyQt6 - Qt6 Python Bindings\n• PyQt-Fluent-Widgets - Fluent Design Component Library\n• Cai-install-Web-GUI - Original Project Author\n• httpx - Async HTTP Client\n• Game-Cheats-Manager - Trainer data source (https://github.com/dyang886/Game-Cheats-Manager)\n\nManifest Sources:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• Manifest Helper Library\n\nThanks to all developers and users who contributed to this project!",
+        "about_text": "StarrySky Install - Fluent Design Version\n\nVersion: 1.1\n\nThis is a modern Steam game unlocking tool based on PyQt6-Fluent-Widgets.\n\nFeatures:\n• Fluent Design style\n• Support for multiple manifest sources\n• Game search and adding\n• Installed games management\n• Theme customization\n\nProject URL: https://github.com/Ker0el/StarrySky-install",
+        "thanks_text": "Special Thanks\n\nDevelopers:\n• StarrySky Install Team\n\nOpen Source Projects:\n• PyQt6 - Qt6 Python Bindings\n• PyQt-Fluent-Widgets - Fluent Design Component Library\n• Cai-install-Web-GUI - Original Project Author\n• httpx - Async HTTP Client\n• Game-Cheats-Manager - Trainer data source (https://github.com/dyang886/Game-Cheats-Manager)\n\nManifest Sources:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• Manifest Helper Library\n\nThanks to all developers and users who contributed to this project!",
         "donate": "Donate",
         "donate_title": "Support the Developer",
         "donate_desc": "If this project has been helpful, feel free to buy the author a coffee ☕",
@@ -524,7 +524,7 @@ TEXTS = {
         "reinstall_confirm": "AppID {0} already exists ({1}), re-install anyway?",
     },
     "fr_FR": {
-        "app_title": "AuroraInstall",
+        "app_title": "StarrySky",
         "home": "Accueil",
         "search": "Rechercher",
         "settings": "Paramètres",
@@ -666,8 +666,8 @@ TEXTS = {
         "reset_to_default": "Réinitialiser par défaut",
         "about_title": "À propos",
         "thanks_title": "Crédits",
-        "about_text": "Aurora Install - Version Fluent Design\n\nVersion: 1.1\n\nCeci est un outil de déverrouillage de jeu Steam moderne basé sur PyQt6-Fluent-Widgets.\n\nFonctionnalités:\n• Style Fluent Design\n• Support de plusieurs sources de manifestes\n• Recherche et ajout de jeux\n• Gestion des jeux installés\n• Personnalisation du thème\n\nURL du projet: https://github.com/Ker0el/Aurora-install",
-        "thanks_text": "Remerciements spéciaux\n\nDéveloppeurs:\n• Aurora Install Team\n\nProjets open source:\n• PyQt6 - Bindings Python Qt6\n• PyQt-Fluent-Widgets - Bibliothèque de composants Fluent Design\n• Cai-install-Web-GUI - Auteur du projet original\n• httpx - Client HTTP asynchrone\n\nSources de manifestes:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• Bibliothèque d'aide de manifeste\n\nMerci à tous les développeurs et utilisateurs qui ont contribué à ce projet!",
+        "about_text": "StarrySky Install - Version Fluent Design\n\nVersion: 1.1\n\nCeci est un outil de déverrouillage de jeu Steam moderne basé sur PyQt6-Fluent-Widgets.\n\nFonctionnalités:\n• Style Fluent Design\n• Support de plusieurs sources de manifestes\n• Recherche et ajout de jeux\n• Gestion des jeux installés\n• Personnalisation du thème\n\nURL du projet: https://github.com/Ker0el/StarrySky-install",
+        "thanks_text": "Remerciements spéciaux\n\nDéveloppeurs:\n• StarrySky Install Team\n\nProjets open source:\n• PyQt6 - Bindings Python Qt6\n• PyQt-Fluent-Widgets - Bibliothèque de composants Fluent Design\n• Cai-install-Web-GUI - Auteur du projet original\n• httpx - Client HTTP asynchrone\n\nSources de manifestes:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• Bibliothèque d'aide de manifeste\n\nMerci à tous les développeurs et utilisateurs qui ont contribué à ce projet!",
         "donate": "Faire un don",
         "donate_title": "Soutenir le développeur",
         "donate_desc": "Si ce projet vous a été utile, n'hésitez pas à offrir un café à l'auteur ☕",
@@ -702,7 +702,7 @@ TEXTS = {
         "reinstall_confirm": "L'AppID {0} existe déjà ({1}), réinstaller quand même ?",
     },
     "ru_RU": {
-        "app_title": "AuroraInstall",
+        "app_title": "StarrySky",
         "home": "Главная",
         "search": "Поиск",
         "settings": "Настройки",
@@ -844,8 +844,8 @@ TEXTS = {
         "reset_to_default": "Сбросить по умолчанию",
         "about_title": "О программе",
         "thanks_title": "Благодарности",
-        "about_text": "Aurora Install - Версия Fluent Design\n\nВерсия: 1.1\n\nЭто современный инструмент разблокировки игр Steam на основе PyQt6-Fluent-Widgets.\n\nФункции:\n• Стиль Fluent Design\n• Поддержка нескольких источников манифестов\n• Поиск и добавление игр\n• Управление установленными играми\n• Настройка темы\n\nURL проекта: https://github.com/Ker0el/Aurora-install",
-        "thanks_text": "Особая благодарность\n\nРазработчики:\n• Aurora Install Team\n\nПроекты с открытым исходным кодом:\n• PyQt6 - Привязки Python Qt6\n• PyQt-Fluent-Widgets - Библиотека компонентов Fluent Design\n• Cai-install-Web-GUI - Автор оригинального проекта\n• httpx - Асинхронный HTTP клиент\n\nИсточники манифестов:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• Библиотека помощи манифеста\n\nСпасибо всем разработчикам и пользователям, внесшим вклад в этот проект!",
+        "about_text": "StarrySky Install - Версия Fluent Design\n\nВерсия: 1.1\n\nЭто современный инструмент разблокировки игр Steam на основе PyQt6-Fluent-Widgets.\n\nФункции:\n• Стиль Fluent Design\n• Поддержка нескольких источников манифестов\n• Поиск и добавление игр\n• Управление установленными играми\n• Настройка темы\n\nURL проекта: https://github.com/Ker0el/StarrySky-install",
+        "thanks_text": "Особая благодарность\n\nРазработчики:\n• StarrySky Install Team\n\nПроекты с открытым исходным кодом:\n• PyQt6 - Привязки Python Qt6\n• PyQt-Fluent-Widgets - Библиотека компонентов Fluent Design\n• Cai-install-Web-GUI - Автор оригинального проекта\n• httpx - Асинхронный HTTP клиент\n\nИсточники манифестов:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• Библиотека помощи манифеста\n\nСпасибо всем разработчикам и пользователям, внесшим вклад в этот проект!",
         "donate": "Пожертвовать",
         "donate_title": "Поддержать разработчика",
         "donate_desc": "Если проект оказался полезным, угостите автора кофе ☕",
@@ -880,7 +880,7 @@ TEXTS = {
         "reinstall_confirm": "AppID {0} уже существует ({1}), всё равно переустановить?",
     },
     "de_DE": {
-        "app_title": "AuroraInstall",
+        "app_title": "StarrySky",
         "home": "Startseite",
         "search": "Suchen",
         "settings": "Einstellungen",
@@ -1022,8 +1022,8 @@ TEXTS = {
         "reset_to_default": "Auf Standard zurücksetzen",
         "about_title": "Über",
         "thanks_title": "Danksagungen",
-        "about_text": "Aurora Install - Fluent Design Version\n\nVersion: \n1.1\nDies ist ein modernes Steam-Spiel-Unlocking-Tool basierend auf PyQt6-Fluent-Widgets.\n\nFunktionen:\n• Fluent Design Stil\n• Unterstützung für mehrere Manifest-Quellen\n• Spielsuche und -hinzufügen\n• Verwaltung installierter Spiele\n• Themen-Anpassung\n\nProjekt-URL: https://github.com/Ker0el/Aurora-install",
-        "thanks_text": "Besondere Danksagung\n\nEntwickler:\n• Aurora Install Team\n\nOpen-Source-Projekte:\n• PyQt6 - Qt6 Python Bindings\n• PyQt-Fluent-Widgets - Fluent Design Komponentenbibliothek\n• Cai-install-Web-GUI - Originalprojekt-Autor\n• httpx - Asynchroner HTTP-Client\n\nManifest-Quellen:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• Manifest-Hilfsbibliothek\n\nVielen Dank an alle Entwickler und Benutzer, die zu diesem Projekt beigetragen haben!",
+        "about_text": "StarrySky Install - Fluent Design Version\n\nVersion: \n1.1\nDies ist ein modernes Steam-Spiel-Unlocking-Tool basierend auf PyQt6-Fluent-Widgets.\n\nFunktionen:\n• Fluent Design Stil\n• Unterstützung für mehrere Manifest-Quellen\n• Spielsuche und -hinzufügen\n• Verwaltung installierter Spiele\n• Themen-Anpassung\n\nProjekt-URL: https://github.com/Ker0el/StarrySky-install",
+        "thanks_text": "Besondere Danksagung\n\nEntwickler:\n• StarrySky Install Team\n\nOpen-Source-Projekte:\n• PyQt6 - Qt6 Python Bindings\n• PyQt-Fluent-Widgets - Fluent Design Komponentenbibliothek\n• Cai-install-Web-GUI - Originalprojekt-Autor\n• httpx - Asynchroner HTTP-Client\n\nManifest-Quellen:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• Manifest-Hilfsbibliothek\n\nVielen Dank an alle Entwickler und Benutzer, die zu diesem Projekt beigetragen haben!",
         "donate": "Spenden",
         "donate_title": "Entwickler unterstützen",
         "donate_desc": "Wenn dieses Projekt hilfreich war, spendieren Sie dem Autor einen Kaffee ☕",
@@ -1058,7 +1058,7 @@ TEXTS = {
         "reinstall_confirm": "AppID {0} ist bereits vorhanden ({1}), trotzdem neu installieren?",
     },
     "ja_JP": {
-        "app_title": "AuroraInstall",
+        "app_title": "StarrySky",
         "home": "ホーム",
         "search": "検索",
         "settings": "設定",
@@ -1200,8 +1200,8 @@ TEXTS = {
         "reset_to_default": "デフォルトにリセット",
         "about_title": "について",
         "thanks_title": "謝辞",
-        "about_text": "Aurora Install - Fluent Design バージョン\n\nバージョン: 1.1\n\nこれはPyQt6-Fluent-WidgetsをベースにしたモダンなSteamゲームアンロックツールです。\n\n機能:\n• Fluent Designスタイル\n• 複数のマニフェストソースをサポート\n• ゲーム検索と追加\n• インストール済みゲームの管理\n• テーマカスタマイズ\n\nプロジェクトURL: https://github.com/Ker0el/Aurora-install",
-        "thanks_text": "特別な感謝\n\n開発者:\n• Aurora Install Team\n\nオープンソースプロジェクト:\n• PyQt6 - Qt6 Pythonバインディング\n• PyQt-Fluent-Widgets - Fluent Designコンポーネントライブラリ\n• Cai-install-Web-GUI - オリジナルプロジェクト作成者\n• httpx - 非同期HTTPクライアント\n\nマニフェストソース:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• マニフェストヘルパーライブラリ\n\nこのプロジェクトに貢献してくれたすべての開発者とユーザーの皆様に感謝します！",
+        "about_text": "StarrySky Install - Fluent Design バージョン\n\nバージョン: 1.1\n\nこれはPyQt6-Fluent-WidgetsをベースにしたモダンなSteamゲームアンロックツールです。\n\n機能:\n• Fluent Designスタイル\n• 複数のマニフェストソースをサポート\n• ゲーム検索と追加\n• インストール済みゲームの管理\n• テーマカスタマイズ\n\nプロジェクトURL: https://github.com/Ker0el/StarrySky-install",
+        "thanks_text": "特別な感謝\n\n開発者:\n• StarrySky Install Team\n\nオープンソースプロジェクト:\n• PyQt6 - Qt6 Pythonバインディング\n• PyQt-Fluent-Widgets - Fluent Designコンポーネントライブラリ\n• Cai-install-Web-GUI - オリジナルプロジェクト作成者\n• httpx - 非同期HTTPクライアント\n\nマニフェストソース:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• マニフェストヘルパーライブラリ\n\nこのプロジェクトに貢献してくれたすべての開発者とユーザーの皆様に感謝します！",
         "donate": "寄付",
         "donate_title": "開発者を支援",
         "donate_desc": "このプロジェクトが役に立った場合は、作者にコーヒーをご馳走ください ☕",
@@ -1239,7 +1239,7 @@ TEXTS = {
         "reinstall_confirm": "AppID {0} は既に存在します（{1}）。それでも再登録しますか？",
     },
     "zh_TW": {
-        "app_title": "極光入库",
+        "app_title": "星空入库",
         "home": "主頁",
         "search": "搜尋入库",
         "settings": "設定",
@@ -1391,8 +1391,8 @@ TEXTS = {
         "reset_to_default": "重設為預設",
         "about_title": "關於",
         "thanks_title": "感謝",
-        "about_text": "Aurora Install - Fluent Design 版本\n\n版本: 1.1\n\n這是一套基於 PyQt6-Fluent-Widgets 的現代化 Steam 遊戲解鎖工具。\n\n功能特色:\n• Fluent Design 設計風格\n• 支援多種清單來源\n• 遊戲搜尋與入库\n• 已入库遊戲管理\n• 佈景主題自訂\n\n專案位址: https://github.com/Ker0el/Aurora-install",
-        "thanks_text": "特別感謝\n\n開發者:\n• Aurora Install Team\n\n開源專案:\n• PyQt6 - Qt6 Python 綁定\n• PyQt-Fluent-Widgets - Fluent Design 元件庫\n• Cai-install-Web-GUI - 原始專案作者\n• httpx - 非同步 HTTP 用戶端\n\n清單來源提供:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• 清單不求人\n\n感謝所有為本專案貢獻的開發者與使用者！",
+        "about_text": "StarrySky Install - Fluent Design 版本\n\n版本: 1.1\n\n這是一套基於 PyQt6-Fluent-Widgets 的現代化 Steam 遊戲解鎖工具。\n\n功能特色:\n• Fluent Design 設計風格\n• 支援多種清單來源\n• 遊戲搜尋與入库\n• 已入库遊戲管理\n• 佈景主題自訂\n\n專案位址: https://github.com/Ker0el/StarrySky-install",
+        "thanks_text": "特別感謝\n\n開發者:\n• StarrySky Install Team\n\n開源專案:\n• PyQt6 - Qt6 Python 綁定\n• PyQt-Fluent-Widgets - Fluent Design 元件庫\n• Cai-install-Web-GUI - 原始專案作者\n• httpx - 非同步 HTTP 用戶端\n\n清單來源提供:\n• SWA V2\n• Cysaw\n• Furcate\n• Walftech\n• steamdatabase\n• SteamAutoCracks\n• Sudama\n• 清單不求人\n\n感謝所有為本專案貢獻的開發者與使用者！",
         "donate": "捐贈",
         "donate_title": "支持開發者",
         "donate_desc": "如果本專案對你有幫助，歡迎請作者喝杯咖啡 ☕",
@@ -2221,10 +2221,37 @@ def _fetch_cover_data_worker(appid, card):
             # 写日志便于定位（exe 里异常被吞是死穴）
             try:
                 import logging
-                logging.getLogger('Aurora Install').warning(f"封面下载失败 {appid}: {e}")
+                logging.getLogger('StarrySky Install').warning(f"封面下载失败 {appid}: {e}")
             except Exception:
                 pass
     threading.Thread(target=_run, daemon=True).start()
+
+
+def _cover_cache_path(appid):
+    """封面本地缓存路径（config/covers/{appid}.jpg）"""
+    return APP_ROOT / 'config' / 'covers' / f"{appid}.jpg"
+
+
+def _load_cached_cover(appid):
+    """读取本地封面缓存，成功返回 bytes，失败返回 None"""
+    try:
+        p = _cover_cache_path(appid)
+        if p.exists():
+            data = p.read_bytes()
+            return data if data else None
+    except Exception:
+        pass
+    return None
+
+
+def _save_cached_cover(appid, data):
+    """封面写入本地缓存（静默失败，不打断主流程）"""
+    try:
+        p = _cover_cache_path(appid)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_bytes(data)
+    except Exception:
+        pass
 
 
 def _sanitize_record_name(appid, name):
@@ -2415,7 +2442,13 @@ class CoverCard(CardWidget):
         self._cover_httpx_started = False
 
     def load_cover(self):
-        """加载游戏封面：Qt 老格式 CDN 直连 + 并行启动 httpx hash 链路（谁先成功用谁）"""
+        """加载游戏封面：本地缓存命中直接显示；否则 Qt 老格式 CDN 直连 + 并行启动 httpx hash 链路（谁先成功用谁）"""
+        cached = _load_cached_cover(self.appid)
+        if cached:
+            pixmap = QPixmap()
+            if pixmap.loadFromData(cached):
+                self.coverLabel.setPixmap(pixmap)
+                return  # 命中缓存，跳过全部网络逻辑
         # Steam 封面 URL（cloudflare 主源，加载失败后回退 akamai）
         cdn = "akamai" if self._cover_fallback else "cloudflare"
         cover_url = f"https://cdn.{cdn}.steamstatic.com/steam/apps/{self.appid}/header.jpg"
@@ -2466,6 +2499,7 @@ class CoverCard(CardWidget):
             pixmap = QPixmap()
             if pixmap.loadFromData(data):
                 self.coverLabel.setPixmap(pixmap)
+                _save_cached_cover(self.appid, bytes(data))
                 ok = True
         if not ok and not self._cover_fallback:
             # 主 CDN 失败，回退备用 CDN 重试一次
@@ -2491,6 +2525,7 @@ class CoverCard(CardWidget):
         pixmap = QPixmap()
         if pixmap.loadFromData(data):
             self.coverLabel.setPixmap(pixmap)
+            _save_cached_cover(self.appid, data)
 
 
 class GameCard(CoverCard):
@@ -8004,7 +8039,7 @@ class SettingsPage(ScrollArea):
         self._pending_logs: list = []
         self._log_handler = QtLogHandler(self)
         self._log_handler.log_record.connect(self._append_log)
-        logging.getLogger('Aurora Install').addHandler(self._log_handler)
+        logging.getLogger('StarrySky Install').addHandler(self._log_handler)
 
     def _build_ui(self):
         """兼容 _prebuild_settings 调用，直接触发分帧构建"""
@@ -8335,10 +8370,10 @@ class SettingsPage(ScrollArea):
         self.donate_btn.clicked.connect(self.show_donate)
         self.donate_btn.setFixedWidth(80)
         button_layout.addWidget(self.donate_btn)
-        self.github_btn = HyperlinkButton("https://github.com/Ker0el/Aurora-install", "GitHub")
+        self.github_btn = HyperlinkButton("https://github.com/Ker0el/StarrySky-install", "GitHub")
         self.github_btn.setFixedWidth(70)
         button_layout.addWidget(self.github_btn)
-        self.document_btn = HyperlinkButton("https://github.com/Ker0el/Aurora-install", "文档")
+        self.document_btn = HyperlinkButton("https://github.com/Ker0el/StarrySky-install", "文档")
         self.document_btn.setFixedWidth(70)
         button_layout.addWidget(self.document_btn)
         button_layout.addStretch(1)
@@ -8396,7 +8431,7 @@ class SettingsPage(ScrollArea):
     def _on_backup_clicked(self):
         """备份：将已入库记录和清单文件打包为 zip"""
         from PyQt6.QtWidgets import QFileDialog
-        default_name = f"aurora_backup_{_time.strftime('%Y%m%d')}.zip"
+        default_name = f"starrysky_backup_{_time.strftime('%Y%m%d')}.zip"
         path, _ = QFileDialog.getSaveFileName(self, tr("backup"), default_name, "ZIP 文件 (*.zip)")
         if not path:
             return
@@ -8859,8 +8894,8 @@ class SettingsPage(ScrollArea):
             # 如果有版本号，直接生成下载链接（GitHub tag 带 v 前缀，需补回）
             if latest_version:
                 tag = latest_version if latest_version.startswith('v') else f"v{latest_version}"
-                # 生成具体的下载链接格式：https://github.com/Ker0el/Aurora-install/releases/download/v1.8.2/AuroraInstall.exe
-                download_url = f"https://github.com/{GITHUB_REPO}/releases/download/{tag}/AuroraInstall.exe"
+                # 生成具体的下载链接格式：https://github.com/Ker0el/StarrySky-install/releases/download/v1.8.2/StarrySkyInstall.exe
+                download_url = f"https://github.com/{GITHUB_REPO}/releases/download/{tag}/StarrySkyInstall.exe"
                 
                 if is_cn:
                     # 中国大陆用户使用镜像
@@ -8937,7 +8972,7 @@ class SettingsPage(ScrollArea):
                 inner_layout.setSpacing(2)
 
                 add_section(inner_layout, "开发者")
-                add_text(inner_layout, "• Aurora Install Team")
+                add_text(inner_layout, "• StarrySky Install Team")
 
                 add_section(inner_layout, "开源项目")
                 add_link(inner_layout, "PyQt6", "https://pypi.org/project/PyQt6/")
@@ -8951,7 +8986,7 @@ class SettingsPage(ScrollArea):
                     add_text(inner_layout, f"• {src}")
 
                 add_section(inner_layout, "社区与联系")
-                add_link(inner_layout, "GitHub", "https://github.com/Ker0el/Aurora-install")
+                add_link(inner_layout, "GitHub", "https://github.com/Ker0el/StarrySky-install")
 
                 add_text(inner_layout, "\n感谢所有为本项目做出贡献的开发者和用户！")
                 inner_layout.addStretch(1)

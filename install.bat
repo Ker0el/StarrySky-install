@@ -1,10 +1,10 @@
 @echo off
 chcp 65001
-title Aurora Install - 极光入库
+title StarrySky Install - 星空入库
 
 :menu
 echo ========================================
-echo     Aurora Install - 极光入库
+echo     StarrySky Install - 星空入库
 echo ========================================
 echo.
 echo [1] 安装依赖 (标准源)
@@ -41,7 +41,7 @@ goto menu
 
 :install_standard
 echo ========================================
-echo   安装 Aurora Install 极光入库依赖
+echo   安装 StarrySky Install 星空入库依赖
 echo ========================================
 echo.
 
@@ -94,7 +94,7 @@ goto menu
 
 :install_china
 echo ========================================
-echo   安装 Aurora Install 极光入库依赖
+echo   安装 StarrySky Install 星空入库依赖
     echo   使用清华大学镜像 (中国加速)
 echo ========================================
 echo.
@@ -193,7 +193,7 @@ goto menu
 
 :run
 echo ========================================
-echo   Aurora Install - 极光入库版本
+echo   StarrySky Install - 星空入库版本
 echo ========================================
 echo.
 
@@ -221,7 +221,7 @@ if errorlevel 1 (
     echo.
 )
 
-echo [INFO] 启动 Aurora Install 版本...
+echo [INFO] 启动 StarrySky Install 版本...
 echo.
 
 python fluent_app.py
@@ -234,7 +234,7 @@ if errorlevel 1 (
 goto menu
 
 :exit
-echo 感谢使用 Aurora Install - 极光入库
+echo 感谢使用 StarrySky Install - 星空入库
 echo 再见!
 echo.
 pause

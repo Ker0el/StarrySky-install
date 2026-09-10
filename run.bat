@@ -1,8 +1,8 @@
 @echo off
-title Aurora Install - 极光入库
+title StarrySky Install - 星空入库
 
 echo ========================================
-echo   Aurora Install - 极光入库 Version
+echo   StarrySky Install - 星空入库 Version
 echo ========================================
 echo.
 
@@ -30,7 +30,7 @@ if errorlevel 1 (
     echo.
 )
 
-echo [INFO] Starting Aurora Install...
+echo [INFO] Starting StarrySky Install...
 echo.
 
 python main.py

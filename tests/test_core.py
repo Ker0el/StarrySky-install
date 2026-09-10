@@ -94,7 +94,7 @@ class RecordsTestCase(unittest.TestCase):
     """已入库记录 存取/去重/状态检测"""
 
     def setUp(self):
-        self.tmp = Path(tempfile.mkdtemp(prefix='aurora_test_'))
+        self.tmp = Path(tempfile.mkdtemp(prefix='starrysky_test_'))
         self.records_path = self.tmp / 'config' / 'installed_games.json'
         self._old_path = fluent_app.INSTALLED_RECORDS_PATH
         self._old_steam = fluent_app._get_steam_path_sync
@@ -174,7 +174,7 @@ class ZipTargetTestCase(unittest.TestCase):
     """恢复 zip 条目路径安全检查"""
 
     def setUp(self):
-        self.tmp = Path(tempfile.mkdtemp(prefix='aurora_test_'))
+        self.tmp = Path(tempfile.mkdtemp(prefix='starrysky_test_'))
         self.steam = _tmp_steam(self.tmp)
         self.rec = self.tmp / 'config' / 'installed_games.json'
 
@@ -332,7 +332,7 @@ class SanitizeNameTestCase(unittest.TestCase):
     """入库记录名字清洗：占位名不写入、不降级已有真实名"""
 
     def setUp(self):
-        self.tmp = Path(tempfile.mkdtemp(prefix='aurora_test_'))
+        self.tmp = Path(tempfile.mkdtemp(prefix='starrysky_test_'))
         self.records_path = self.tmp / 'config' / 'installed_games.json'
         self._old_path = fluent_app.INSTALLED_RECORDS_PATH
         self._old_steam = fluent_app._get_steam_path_sync
@@ -380,7 +380,7 @@ class MatchInstalledRecordsTestCase(unittest.TestCase):
     """本地已入库记录匹配（搜索页离线命中）"""
 
     def setUp(self):
-        self.tmp = Path(tempfile.mkdtemp(prefix='aurora_test_'))
+        self.tmp = Path(tempfile.mkdtemp(prefix='starrysky_test_'))
         self.records_path = self.tmp / 'config' / 'installed_games.json'
         self._old_path = fluent_app.INSTALLED_RECORDS_PATH
         self._old_steam = fluent_app._get_steam_path_sync

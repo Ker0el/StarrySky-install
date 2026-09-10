@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概述
 
-Aurora Install（极光入库）— Python 3.8+ / PyQt6 桌面应用，Steam 游戏入库工具（解锁器：SteamTools / OpenSteamTools / GreenLuma）。UI 用 PyQt6-Fluent-Widgets。已发布到 GitHub（Ker0el/Aurora-install），README 中英文 + Release 每版上传 exe。
+StarrySky Install（星空入库）— Python 3.8+ / PyQt6 桌面应用，Steam 游戏入库工具（解锁器：SteamTools / OpenSteamTools / GreenLuma）。UI 用 PyQt6-Fluent-Widgets。已发布到 GitHub（Ker0el/StarrySky-install），README 中英文 + Release 每版上传 exe。**v1.9.0 由「极光入库 / Aurora Install」改名而来**（本地目录仍叫 Aurora-install，无需改）。
 
 ## 常用命令
 
@@ -15,11 +15,11 @@ python main.py
 # 单元测试（全部，无 PyQt6 依赖，sys.modules 注入 mock Qt）
 python -m unittest discover -s tests -v
 
-# 打包 exe（PyInstaller onefile，输出 dist/AuroraInstall.exe，约 1 分钟）
+# 打包 exe（PyInstaller onefile，输出 dist/StarrySkyInstall.exe，约 1 分钟）
 python build_exe.py
 ```
 
-打包前若 exe 被占用（程序运行中），先 `taskkill /F /IM AuroraInstall.exe` 并删除 `dist/AuroraInstall.exe`。打包后会自动跑 `backend/_insert_drm.py`（D加密），该脚本不存在时跳过（正常）。**推送 GitHub 直连会被重置，必须走代理：`git -c http.proxy=http://127.0.0.1:7890 push origin main`**。发布用 `gh release create vX.Y.Z dist/AuroraInstall.exe --title ... --notes ...`。
+打包前若 exe 被占用（程序运行中），先 `taskkill /F /IM StarrySkyInstall.exe` 并删除 `dist/StarrySkyInstall.exe`。打包后会自动跑 `backend/_insert_drm.py`（D加密），该脚本不存在时跳过（正常）。**推送 GitHub 直连会被重置，必须走代理：`git -c http.proxy=http://127.0.0.1:7890 push origin main`**。发布用 `gh release create vX.Y.Z dist/StarrySkyInstall.exe --title ... --notes ...`。
 
 ## ⚠️ 版本号（血泪教训）
 
@@ -84,5 +84,5 @@ SearchPage 集成：**「搜下载站」复选框 `pan_search_check`（默认勾
 - **镜像加速**：`checkcn()` 检测中国大陆 → 用 gh-proxy 镜像（`check_for_updates`/`download_ost_zip` 模式）
 - **测试**：`tests/test_core.py` 用 `sys.modules` 注入 mock Qt 模块跑无 GUI 逻辑；`_make_fake_module`/`_AnyCls` 可复用（如脚本里 `import tests.test_core as tc` 后即可导入后端模块）；新逻辑（如 `_is_placeholder_name`/`_match_installed_records`/`_sanitize_record_name`）要有对应用例
 - 仓库无 `.cursorrules`/Copilot 规则；README（中英文）由 v1.8 重写，含三步入库教程（初始化→搜索入库→Steam 开玩）
-- **打包注意**：`build_exe.py`/`AuroraInstall.spec` 含已不存在的 hidden-import/数据目录引用（`backend.authorizer_backend`、`backend.cw_extractor_core`、`backend/GBE_Patch`、`backend/GreenLuma_2026_1.7.4-Steam006`），打包异常先查此处；`Resource.json`（顶层的资源站数据）目前无代码引用
+- **打包注意**：`build_exe.py`/`StarrySkyInstall.spec` 含已不存在的 hidden-import/数据目录引用（`backend.authorizer_backend`、`backend.cw_extractor_core`、`backend/GBE_Patch`、`backend/GreenLuma_2026_1.7.4-Steam006`），打包异常先查此处；`Resource.json`（顶层的资源站数据）目前无代码引用
 - **GitHub 直连不稳定**：fetch/push 失败先走 `-c http.proxy=http://127.0.0.1:7890`；`gh release` 上传偶发 EOF 需重试

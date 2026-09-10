@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Aurora Install（极光入库）入口
+StarrySky Install（星空入库）入口
 """
 import sys
 import os
@@ -35,7 +35,7 @@ def main():
     sys.excepthook = _excepthook
 
     # 单实例锁：防止多开导致 Qt6Core 崩溃（多实例并发写 config/日志 + PyInstaller _MEI 冲突）
-    shared_memory = QSharedMemory("AuroraInstall_SingleInstance")
+    shared_memory = QSharedMemory("StarrySkyInstall_SingleInstance")
     if not shared_memory.create(1):
         # 已有实例在运行，直接激活已有窗口后退出
         try:

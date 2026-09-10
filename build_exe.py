@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 PyInstaller 打包脚本
-用于将主程序打包成独立的 AuroraInstall exe 可执行文件
+用于将主程序打包成独立的 StarrySkyInstall exe 可执行文件
 """
 
 import PyInstaller.__main__
@@ -18,7 +18,7 @@ def build_exe():
     # PyInstaller 参数
     args = [
         'main.py',  # 主程序文件
-        '--name=AuroraInstall',  # 生成的 exe 名称
+        '--name=StarrySkyInstall',  # 生成的 exe 名称
         '--onefile',  # 打包成单个文件
         '--windowed',  # 无控制台窗口（GUI程序）
         '--icon=assets/icon.ico',  # 图标文件（如果存在）
@@ -45,6 +45,25 @@ def build_exe():
         '--workpath=build',  # 工作目录
         '--specpath=.',  # spec 文件目录
     ]
+
+    # 排除与项目无关的可选重依赖。
+    # 背景：httpx 顶层 try 导入 httpx._main → rich → rich.pretty 里的
+    # `from IPython.core.formatters import BaseFormatter`（IPython 环境下才会执行），
+    # PyInstaller 静态分析会顺着这条链把整个科学计算/ML 栈打进包（实测 +300MB）。
+    # 这些包的导入点都有 try/except 保护，且本项目从不使用，排除安全。
+    EXCLUDES = [
+        # 交互式/科学计算栈
+        'IPython', 'ipykernel', 'ipywidgets', 'jupyter', 'jupyter_client', 'jupyter_core',
+        'nbformat', 'nbconvert', 'matplotlib', 'matplotlib_inline', 'mpl_toolkits',
+        'scipy', 'pandas', 'sklearn', 'sympy', 'networkx',
+        # ML 栈
+        'torch', 'torchvision', 'torchaudio', 'functorch',
+        'transformers', 'diffusers', 'accelerate', 'timm', 'gradio',
+        'datasets', 'huggingface_hub', 'safetensors', 'tokenizers',
+        # 其他无关重包
+        'pygame', 'altair', 'narwhals', 'polars', 'duckdb', 'dask', 'ibis',
+    ]
+    args += [f'--exclude-module={m}' for m in EXCLUDES]
 
     # 检查图标文件是否存在
     icon_path = current_dir / 'assets' / 'icon.ico'
@@ -77,12 +96,12 @@ def build_exe():
         PyInstaller.__main__.run(args)
         
         print("\n打包完成！")
-        print(f"生成的 exe 文件在: {current_dir / 'dist' / 'AuroraInstall.exe'}")
+        print(f"生成的 exe 文件在: {current_dir / 'dist' / 'StarrySkyInstall.exe'}")
         
         # 添加D加密
         print("\n正在添加D加密...")
         drm_script = current_dir / 'backend' / '_insert_drm.py'
-        exe_file = current_dir / 'dist' / 'AuroraInstall.exe'
+        exe_file = current_dir / 'dist' / 'StarrySkyInstall.exe'
         
         if drm_script.exists() and exe_file.exists():
             try:

@@ -10,7 +10,7 @@ a = Analysis(
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],
+    excludes=['IPython', 'ipykernel', 'ipywidgets', 'jupyter', 'jupyter_client', 'jupyter_core', 'nbformat', 'nbconvert', 'matplotlib', 'matplotlib_inline', 'mpl_toolkits', 'scipy', 'pandas', 'sklearn', 'sympy', 'networkx', 'torch', 'torchvision', 'torchaudio', 'functorch', 'transformers', 'diffusers', 'accelerate', 'timm', 'gradio', 'datasets', 'huggingface_hub', 'safetensors', 'tokenizers', 'pygame', 'altair', 'narwhals', 'polars', 'duckdb', 'dask', 'ibis'],
     noarchive=False,
     optimize=0,
 )
@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='AuroraInstall',
+    name='StarrySkyInstall',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

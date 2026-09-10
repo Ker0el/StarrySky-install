@@ -23,8 +23,8 @@ from pathlib import Path
 from typing import Tuple, Any, List, Dict, Literal
 from urllib.parse import quote
 
-CURRENT_VERSION = "1.8.6"  # 当前版本号
-GITHUB_REPO = "Ker0el/Aurora-install"
+CURRENT_VERSION = "1.9.0"  # 当前版本号
+GITHUB_REPO = "Ker0el/StarrySky-install"
 # --- LOGGING SETUP ---
 LOG_FORMAT = '%(log_color)s%(message)s'
 LOG_COLORS = {
@@ -259,7 +259,7 @@ class CaiBackend:
         return None
 
     def _init_log(self, level=logging.INFO) -> logging.Logger:
-        logger = logging.getLogger('Aurora Install')
+        logger = logging.getLogger('StarrySky Install')
         logger.setLevel(level)
         if not logger.handlers:
             stream_handler = colorlog.StreamHandler()
@@ -284,7 +284,7 @@ class CaiBackend:
         if self.config.get("logging_files", True):
             logs_dir = self.project_root / 'logs'
             logs_dir.mkdir(exist_ok=True)
-            log_file_path = logs_dir / f'aurora-install-gui-{time.strftime("%Y-%m-%d")}.log'
+            log_file_path = logs_dir / f'starrysky-install-gui-{time.strftime("%Y-%m-%d")}.log'
             file_handler = logging.FileHandler(log_file_path, 'a', encoding='utf-8')
             file_handler.setLevel(level)
             file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
@@ -358,7 +358,7 @@ class CaiBackend:
             headers = {'Authorization': f'Bearer {github_token}'} if github_token else {}
             
             # 添加 User-Agent 以避免 API 限制
-            headers['User-Agent'] = 'Aurora-Install-Updater'
+            headers['User-Agent'] = 'StarrySky-Install-Updater'
             
             # 镜像 URL 列表（国内用户优先使用镜像）
             api_urls = [
@@ -724,7 +724,7 @@ class CaiBackend:
                         f"https://ghp.ci/https://api.github.com/repos/{repo}/releases/latest"] + urls
         except Exception:
             pass
-        headers = {'User-Agent': 'Aurora-Install-OST'}
+        headers = {'User-Agent': 'StarrySky-Install-OST'}
         for url in urls:
             try:
                 r = await self.client.get(url, headers=headers, timeout=10, follow_redirects=True)
@@ -1250,7 +1250,28 @@ class CaiBackend:
 
         return {"success": not failed, "message": message}
 
-            
+    def _modify_st_lua_for_delete(self, appid: str):
+        """从steamtools.lua中移除一个解锁条目。"""
+        st_lua_path = self.steam_path / 'config' / 'stplug-in' / "steamtools.lua"
+        if not st_lua_path.exists():
+            return
+
+        try:
+            content = st_lua_path.read_text(encoding='utf-8', errors='ignore')
+            # 匹配 addappid(XXX, 1) 或 addappid(XXX) 两种形式
+            pattern = re.compile(r'^\s*addappid\s*\(\s*' + re.escape(appid) + r'[^)]*\)\s*$', re.MULTILINE)
+            new_content, count = pattern.subn('', content)
+
+            if count > 0:
+                # 清理空行
+                new_content_cleaned = "\n".join(line for line in new_content.splitlines() if line.strip())
+                st_lua_path.write_text(new_content_cleaned + "\n" if new_content_cleaned else "", encoding='utf-8')
+                self.log.info(f"已从 steamtools.lua 移除 AppID {appid} 的解锁条目。")
+        except Exception as e:
+            self.log.error(f"修改 steamtools.lua 以删除 AppID {appid} 时失败: {e}")
+            # 不再抛出异常，避免中断整个删除过程
+
+
     # --- END OF File Manager Methods ---
 
     # --- NEW: Custom repository support functions ---
@@ -3837,8 +3858,11 @@ class CaiBackend:
         "partner.steamgames.com":    "23.52.12.176",
         "steambroadcast.akamaized.net": "23.52.12.176",
     }
-    HOSTS_MARK_BEGIN = "# >>> Aurora-Install Steam Accelerate Begin <<<"
-    HOSTS_MARK_END   = "# >>> Aurora-Install Steam Accelerate End <<<"
+    HOSTS_MARK_BEGIN = "# >>> StarrySky-Install Steam Accelerate Begin <<<"
+    HOSTS_MARK_END   = "# >>> StarrySky-Install Steam Accelerate End <<<"
+    # 旧版（Aurora/极光）写入的标记：升级后仍要能识别并清理老版本残留在 hosts 里的条目
+    HOSTS_LEGACY_BEGIN = ("# >>> Aurora-Install Steam Accelerate Begin <<<",)
+    HOSTS_LEGACY_END   = ("# >>> Aurora-Install Steam Accelerate End <<<",)
     HOSTS_PATH = Path(os.environ.get("SystemRoot", "C:\\Windows")) / "System32" / "drivers" / "etc" / "hosts"
 
     def _get_hosts_content(self) -> str:
@@ -3850,7 +3874,8 @@ class CaiBackend:
     def get_accelerate_status(self) -> bool:
         """检查加速是否已启用（hosts 中是否有我们的标记）"""
         try:
-            return self.HOSTS_MARK_BEGIN in self._get_hosts_content()
+            content = self._get_hosts_content()
+            return any(m in content for m in (self.HOSTS_MARK_BEGIN,) + self.HOSTS_LEGACY_BEGIN)
         except Exception:
             return False
 
@@ -3886,12 +3911,14 @@ class CaiBackend:
 
     def _remove_accelerate_block(self, content: str) -> str:
         lines = content.splitlines()
+        begins = (self.HOSTS_MARK_BEGIN,) + self.HOSTS_LEGACY_BEGIN
+        ends = (self.HOSTS_MARK_END,) + self.HOSTS_LEGACY_END
         out, skip = [], False
         for line in lines:
-            if line.strip() == self.HOSTS_MARK_BEGIN:
+            if line.strip() in begins:
                 skip = True
                 continue
-            if line.strip() == self.HOSTS_MARK_END:
+            if line.strip() in ends:
                 skip = False
                 continue
             if not skip:

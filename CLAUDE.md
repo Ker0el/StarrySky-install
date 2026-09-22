@@ -19,7 +19,7 @@ python -m unittest discover -s tests -v
 python build_exe.py
 ```
 
-打包前若 exe 被占用（程序运行中），先 `taskkill /F /IM StarrySkyInstall.exe` 并删除 `dist/StarrySkyInstall.exe`。打包后会自动跑 `backend/_insert_drm.py`（D加密），该脚本不存在时跳过（正常）。**推送 GitHub 直连会被重置，必须走代理：`git -c http.proxy=http://127.0.0.1:7890 push origin main`**。发布用 `gh release create vX.Y.Z dist/StarrySkyInstall.exe --title ... --notes ...`。
+打包前若 exe 被占用（程序运行中），先 `taskkill /F /IM StarrySkyInstall.exe` 并删除 `dist/StarrySkyInstall.exe`。打包后会自动跑 `backend/_insert_drm.py`（D加密），该脚本不存在时跳过（正常）。**推送 GitHub 直连不稳定，失败时走代理**：`git -c http.proxy=http://127.0.0.1:<端口> push origin main`——**端口随代理工具而异（Clash Verge=7897、Clash=7890），用 `netstat -ano | grep LISTENING` 确认真实端口，别照抄**。2026-09-22 实测直连 push 成功，所以先试直连、失败再挂代理。发布用 `gh release create vX.Y.Z dist/StarrySkyInstall.exe --title ... --notes-file <文件>`；exe 约 82MB，上传常超 7 分钟被转后台，属正常。
 
 ## ⚠️ 版本号（血泪教训）
 
@@ -86,4 +86,4 @@ SearchPage 集成：**「搜下载站」复选框 `pan_search_check`（默认勾
 - 仓库无 `.cursorrules`/Copilot 规则；README（中英文）由 v1.8 重写，含三步入库教程（初始化→搜索入库→Steam 开玩）
 - **打包注意**：`build_exe.py`/`StarrySkyInstall.spec` 含已不存在的 hidden-import/数据目录引用（`backend.authorizer_backend`、`backend.cw_extractor_core`、`backend/GBE_Patch`、`backend/GreenLuma_2026_1.7.4-Steam006`），打包异常先查此处；`Resource.json`（顶层的资源站数据）目前无代码引用
 - **⚠️ 别删 `build_exe.py` 里的 `EXCLUDES` 排除列表**：`httpx` 顶层 try 导入 `httpx._main` → `rich` → `rich.pretty` 里的 `from IPython.core.formatters import BaseFormatter`（仅 IPython 环境下才执行的惰性导入），PyInstaller 静态分析会顺这条链把本机装的整个科学计算/ML 栈（torch/transformers/diffusers/matplotlib/gradio…）打进包。本机 2026-08-26 装上这些包后 exe 从 124MB 暴涨到 426MB，加排除后 86MB。这些导入点都有 try/except 保护、项目从不使用，排除是安全的。**若 exe 再次异常变大**：用 `build/StarrySkyInstall/xref-StarrySkyInstall.html`（PyInstaller 反向引用图）从异常包向上追溯导入链，定位真凶
-- **GitHub 直连不稳定**：fetch/push 失败先走 `-c http.proxy=http://127.0.0.1:7890`；`gh release` 上传偶发 EOF 需重试
+- **GitHub 直连不稳定**：fetch/push 失败先走 `-c http.proxy=http://127.0.0.1:<端口>`（端口随代理工具变，Clash Verge=7897、Clash=7890，先 netstat 确认）；`gh release` 上传偶发 EOF 需重试

@@ -46,6 +46,40 @@ def resource_path(name: str) -> Path:
         base = APP_ROOT
     return base / name
 
+# 启动前的配置快照：用于区分「全新安装」与「老用户升级」。
+# 必须在任何代码写 config.json 之前读取——CaiBackend.load_config() 发现配置缺失时
+# 会自动生成默认配置（gen_config_file），等到弹窗那一刻再查文件存在与否，
+# 全新安装会被误判成老用户。模块导入时执行是唯一可靠的时机。
+def _read_config_at_startup() -> dict:
+    try:
+        cfg_path = APP_ROOT / 'config' / 'config.json'
+        if cfg_path.exists():
+            import json as _json
+            with open(cfg_path, 'r', encoding='utf-8') as f:
+                data = _json.load(f)
+            if isinstance(data, dict):
+                return data
+    except Exception:
+        pass
+    return {}
+
+_CONFIG_AT_STARTUP = _read_config_at_startup()
+
+
+def _should_show_disclaimer(snapshot: dict) -> bool:
+    """免责声明门控：仅「全新安装」或「此前拒绝过」时返回 True。
+
+    - 已同意过       → 不再打扰
+    - 启动前已有配置 → 老用户升级，静默放行
+    - 全新安装       → 弹出
+    - 曾拒绝过       → 重新弹出（不给一次拒绝就永久绕过）
+    """
+    if snapshot.get('disclaimer_agreed'):
+        return False
+    if snapshot and not snapshot.get('disclaimer_declined'):
+        return False
+    return True
+
 # 导入后端
 from backend.cai_backend import CaiBackend, get_steam_lang, CURRENT_VERSION, GITHUB_REPO
 
@@ -185,7 +219,7 @@ TEXTS = {
         "default_page_search": "搜索入库",
         "restart_steam": "重启 Steam",
         "hot_recommendations": "热门推荐",
-        "sponsor_nav": "赞助",
+        "sponsor_nav": "打赏",
         "installed_games": "已入库的游戏",
         "search_placeholder": "搜索游戏名称或 AppID",
         "loading": "加载中...",
@@ -367,7 +401,7 @@ TEXTS = {
         "default_page_search": "Search Library",
         "restart_steam": "Restart Steam",
         "hot_recommendations": "Hot Games",
-        "sponsor_nav": "Sponsor",
+        "sponsor_nav": "Tip",
         "installed_games": "Installed Games",
         "search_placeholder": "Search game name or AppID",
         "loading": "Loading...",
@@ -1068,7 +1102,7 @@ TEXTS = {
         "default_page_search": "ライブラリ検索",
         "restart_steam": "Steamを再起動",
         "hot_recommendations": "人気ゲーム",
-        "sponsor_nav": "スポンサー",
+        "sponsor_nav": "投げ銭",
         "installed_games": "インストール済みゲーム",
         "search_placeholder": "ゲーム名またはAppIDを検索",
         "loading": "読み込み中...",
@@ -1249,7 +1283,7 @@ TEXTS = {
         "default_page_search": "搜尋入库",
         "restart_steam": "重新啟動 Steam",
         "hot_recommendations": "熱門推薦",
-        "sponsor_nav": "贊助",
+        "sponsor_nav": "打賞",
         "installed_games": "已入库的遊戲",
         "search_placeholder": "搜尋遊戲名稱或 AppID",
         "loading": "載入中...",
@@ -1946,6 +1980,11 @@ _NEW_FEATURE_TEXTS = {
         "total_games_count": "共 {0} 个游戏",
         "unlocker_conflict": "冲突（需在设置指定）",
         "unlocker_none": "未检测到",
+        "disclaimer_title": "免责声明",
+        "disclaimer": "本工具仅供学习和研究使用，请勿用于商业用途或非法用途。使用者需自行承担使用本工具可能带来的风险与后果。",
+        "disclaimer_free": "本软件源码公开、完全免费，全部功能无条件开放；打赏纯属自愿赠予，与功能使用无关。禁止任何形式的倒卖或付费代售。",
+        "disclaimer_agree": "我已知悉",
+        "disclaimer_exit": "退出",
     },
     "en_US": {
         "already_installed": "AppID {0} already in library ({1}), skipped",
@@ -2043,6 +2082,11 @@ _NEW_FEATURE_TEXTS = {
         "total_games_count": "{0} games total",
         "unlocker_conflict": "Conflict (specify in Settings)",
         "unlocker_none": "Not detected",
+        "disclaimer_title": "Disclaimer",
+        "disclaimer": "This tool is provided for learning and research purposes only. Do not use it for commercial or illegal purposes. Users assume all risks and consequences arising from the use of this tool.",
+        "disclaimer_free": "This software's source code is public and it is free of charge; all features are unconditionally available. Tips are purely voluntary and unrelated to functionality. Reselling or paid redistribution is prohibited.",
+        "disclaimer_agree": "I Understand",
+        "disclaimer_exit": "Exit",
     },
 }
 for _lang, _keys in _NEW_FEATURE_TEXTS.items():
@@ -8989,6 +9033,11 @@ class SettingsPage(ScrollArea):
                 add_link(inner_layout, "GitHub", "https://github.com/Ker0el/StarrySky-install")
 
                 add_text(inner_layout, "\n感谢所有为本项目做出贡献的开发者和用户！")
+
+                # 免责声明：常驻鸣谢页底部，用户可随时查看
+                add_section(inner_layout, f"⚠ {tr('disclaimer_title')}")
+                add_text(inner_layout, tr("disclaimer"))
+                add_text(inner_layout, tr("disclaimer_free"))
                 inner_layout.addStretch(1)
 
                 scroll.setWidget(inner)
@@ -9553,7 +9602,7 @@ class MainWindow(MSFluentWindow):
             tr("gbe_nav")
         )
 
-        # 赞助（免Steam栏目正下方，导航主体区）
+        # 打赏（免Steam栏目正下方，导航主体区）
         self.navigationInterface.addItem(
             routeKey="sponsor",
             icon=FluentIcon.HEART,
@@ -9594,12 +9643,59 @@ class MainWindow(MSFluentWindow):
         # 根据配置切换到默认界面
         self.switch_to_default_page()
 
+        # 首次启动免责声明（确认后写 config，仅弹一次）
+        QTimer.singleShot(300, self._show_disclaimer_if_needed)
+
         # 启动后台预构建设置页 UI（延迟避开启动 worker 高峰，防 Qt 崩溃）
         from PyQt6.QtCore import QTimer
         QTimer.singleShot(6000, self._prebuild_settings)
 
         # 延迟自动检查更新（默认关闭，可在设置中开启）
         QTimer.singleShot(10000, self._auto_check_update)
+
+    def _show_disclaimer_if_needed(self):
+        """免责声明：仅「全新安装」时弹出；老用户升级静默放行。"""
+        if not _should_show_disclaimer(_CONFIG_AT_STARTUP):
+            return
+
+        class DisclaimerDialog(MessageBoxBase):
+            def __init__(self, parent=None):
+                super().__init__(parent)
+                self.titleLabel = TitleLabel(tr("disclaimer_title"), self)
+                body = BodyLabel(tr("disclaimer"))
+                body.setWordWrap(True)
+                body.setMinimumWidth(420)
+                free = BodyLabel(tr("disclaimer_free"))
+                free.setWordWrap(True)
+                free.setMinimumWidth(420)
+                self.viewLayout.addWidget(self.titleLabel)
+                self.viewLayout.addWidget(body)
+                self.viewLayout.addWidget(free)
+                self.yesButton.setText(tr("disclaimer_agree"))
+                self.cancelButton.setText(tr("disclaimer_exit"))
+                self.widget.setMinimumWidth(460)
+
+        agreed = bool(DisclaimerDialog(self).exec())
+        # 同意 → disclaimer_agreed；拒绝 → disclaimer_declined（下次启动仍会弹）
+        self._save_disclaimer_flag('disclaimer_agreed' if agreed else 'disclaimer_declined')
+        if not agreed:
+            QApplication.quit()
+
+    def _save_disclaimer_flag(self, key: str):
+        """把免责声明状态合并写入 config.json（不存在则创建）"""
+        try:
+            cfg_path = APP_ROOT / 'config' / 'config.json'
+            cfg = {}
+            import json as _json
+            if cfg_path.exists():
+                with open(cfg_path, 'r', encoding='utf-8') as f:
+                    cfg = _json.load(f)
+            cfg[key] = True
+            cfg_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(cfg_path, 'w', encoding='utf-8') as f:
+                _json.dump(cfg, f, indent=2, ensure_ascii=False)
+        except Exception:
+            pass
 
     def closeEvent(self, event):
         """窗口关闭：统一停止所有后台 worker 线程，避免 PyInstaller 退出时
@@ -9725,7 +9821,7 @@ class MainWindow(MSFluentWindow):
         self._auto_update_worker.start()
     
     def _show_sponsor(self):
-        """打开赞助页面"""
+        """打开打赏页面"""
         self.settings_page.show_donate()
 
     def on_restart_steam(self):

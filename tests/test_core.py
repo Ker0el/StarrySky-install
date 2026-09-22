@@ -416,5 +416,173 @@ class MatchInstalledRecordsTestCase(unittest.TestCase):
         self.assertEqual(fluent_app._match_installed_records(''), [])
 
 
+class DisclaimerGateTestCase(unittest.TestCase):
+    """免责声明门控：仅「全新安装」或「此前拒绝过」时弹出"""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix='starrysky_disc_'))
+        self._old_root = fluent_app.APP_ROOT
+        fluent_app.APP_ROOT = self.tmp
+
+    def tearDown(self):
+        fluent_app.APP_ROOT = self._old_root
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def _write_cfg(self, data):
+        p = self.tmp / 'config' / 'config.json'
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8')
+
+    # ---- 启动快照读取 ----
+
+    def test_no_config_reads_as_empty(self):
+        """全新安装：config.json 尚未生成（后端会自动生成，故必须在导入时取快照）"""
+        self.assertEqual(fluent_app._read_config_at_startup(), {})
+
+    def test_existing_config_is_read(self):
+        self._write_cfg({'Custom_Steam_Path': 'D:/Steam'})
+        self.assertEqual(
+            fluent_app._read_config_at_startup().get('Custom_Steam_Path'), 'D:/Steam')
+
+    def test_corrupt_config_reads_as_empty(self):
+        p = self.tmp / 'config' / 'config.json'
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text('{not json', encoding='utf-8')
+        self.assertEqual(fluent_app._read_config_at_startup(), {})
+
+    # ---- 门控判定 ----
+
+    def test_fresh_install_shows(self):
+        self.assertTrue(fluent_app._should_show_disclaimer({}))
+
+    def test_agreed_never_shows_again(self):
+        self.assertFalse(fluent_app._should_show_disclaimer({'disclaimer_agreed': True}))
+
+    def test_upgrade_of_existing_user_is_silent(self):
+        """老用户升级：启动前已有配置且无声明标记 → 不打扰"""
+        snap = {'Custom_Steam_Path': 'D:/Steam', 'home_view_mode': 'card'}
+        self.assertFalse(fluent_app._should_show_disclaimer(snap))
+
+    def test_declined_shows_again(self):
+        """拒绝过一次不给永久绕过"""
+        self.assertTrue(fluent_app._should_show_disclaimer({'disclaimer_declined': True}))
+
+    def test_declined_then_agreed_stops_showing(self):
+        snap = {'disclaimer_declined': True, 'disclaimer_agreed': True}
+        self.assertFalse(fluent_app._should_show_disclaimer(snap))
+
+    # ---- 标记写入 + 重启后的完整往返 ----
+
+    def test_agree_then_relaunch_is_silent(self):
+        fluent_app.MainWindow._save_disclaimer_flag(None, 'disclaimer_agreed')
+        self.assertFalse(
+            fluent_app._should_show_disclaimer(fluent_app._read_config_at_startup()))
+
+    def test_decline_then_relaunch_shows_again(self):
+        fluent_app.MainWindow._save_disclaimer_flag(None, 'disclaimer_declined')
+        self.assertTrue(
+            fluent_app._should_show_disclaimer(fluent_app._read_config_at_startup()))
+
+    def test_save_flag_preserves_existing_keys(self):
+        """写标记不能冲掉用户已有配置"""
+        self._write_cfg({'Custom_Steam_Path': 'D:/Steam', 'language': 'en_US'})
+        fluent_app.MainWindow._save_disclaimer_flag(None, 'disclaimer_agreed')
+        cfg = fluent_app._read_config_at_startup()
+        self.assertEqual(cfg.get('Custom_Steam_Path'), 'D:/Steam')
+        self.assertEqual(cfg.get('language'), 'en_US')
+        self.assertTrue(cfg.get('disclaimer_agreed'))
+
+
+class OstDownloadSourceTestCase(unittest.TestCase):
+    """OpenSteamTool 下载源韧性：本地兜底 / 自定义镜像 / 候选排序
+
+    背景：gh-proxy 系列只是 github.com 的网络代理，上游仓库消失时同样 404，
+    不构成可用性兜底。真正的兜底是自定义镜像与本地 zip。
+    """
+
+    ASSET = 'https://github.com/OpenSteam001/OpenSteamTool/releases/download/v1/Release.zip'
+
+    def setUp(self):
+        from backend import cai_backend
+        self.cb = cai_backend
+        self.tmp = Path(tempfile.mkdtemp(prefix='starrysky_ost_'))
+        self.obj = object.__new__(cai_backend.CaiBackend)
+        self.obj.project_root = self.tmp
+        self.obj.config = {}
+        self._cn = False
+
+        async def _checkcn():
+            return self._cn
+
+        self.obj.checkcn = _checkcn
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def _local(self):
+        return self.cb.CaiBackend._ost_local_zip(self.obj)
+
+    def _urls(self, asset_url=None):
+        import asyncio
+        return asyncio.run(
+            self.cb.CaiBackend._ost_zip_urls(self.obj, asset_url or self.ASSET))
+
+    def _put(self, rel, data=b'PK\x03\x04fake'):
+        p = self.tmp / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_bytes(data)
+        return p
+
+    # ---- 本地兜底 ----
+
+    def test_no_local_zip_returns_none(self):
+        self.assertIsNone(self._local())
+
+    def test_convention_path_needs_no_config(self):
+        """约定路径 config/ost_release.zip 零配置生效"""
+        p = self._put('config/ost_release.zip')
+        self.assertEqual(self._local(), p)
+
+    def test_config_path_wins_over_convention(self):
+        custom = self._put('my.zip')
+        self._put('config/ost_release.zip', b'PK\x03\x04other')
+        self.obj.config = {'OpenSteamTool_Local_Zip': str(custom)}
+        self.assertEqual(self._local(), custom)
+
+    def test_empty_zip_is_rejected(self):
+        """0 字节文件不算有效兜底，否则解压必炸"""
+        self._put('config/ost_release.zip', b'')
+        self.assertIsNone(self._local())
+
+    # ---- 下载候选排序 ----
+
+    def test_custom_mirror_first_and_unwrapped(self):
+        """自定义镜像置顶，且不套 gh-proxy（它未必是 GitHub 链接）"""
+        self.obj.config = {'OpenSteamTool_Mirror': 'https://mirror.example.com/ost.zip'}
+        self.assertEqual(self._urls()[0], 'https://mirror.example.com/ost.zip')
+
+    def test_direct_first_outside_cn_with_proxy_fallback(self):
+        self._cn = False
+        urls = self._urls()
+        self.assertEqual(urls[0], self.ASSET)
+        self.assertTrue(any('gh-proxy' in u for u in urls), '直连失败后应有代理兜底')
+
+    def test_proxy_first_inside_cn(self):
+        self._cn = True
+        urls = self._urls()
+        self.assertIn('gh-proxy', urls[0])
+        self.assertEqual(urls[-1], self.ASSET)
+
+    def test_blank_mirror_ignored(self):
+        self.obj.config = {'OpenSteamTool_Mirror': '   '}
+        self.assertNotIn('   ', self._urls())
+
+    def test_mirror_failure_hint_is_actionable(self):
+        """上游挂掉时的报错必须给出两条自救路径"""
+        hint = self.cb._OST_UNAVAILABLE_HINT
+        self.assertIn('ost_release.zip', hint)
+        self.assertIn('OpenSteamTool_Mirror', hint)
+
+
 if __name__ == '__main__':
     unittest.main()

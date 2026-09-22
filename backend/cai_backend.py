@@ -20,7 +20,7 @@ import struct
 import zlib
 import io  # For workshop manifest processing
 from pathlib import Path
-from typing import Tuple, Any, List, Dict, Literal
+from typing import Tuple, Any, List, Dict, Literal, Optional
 from urllib.parse import quote
 
 CURRENT_VERSION = "1.9.0"  # 当前版本号
@@ -100,12 +100,26 @@ DEFAULT_CONFIG = {
     "ST_Fixed_Version": True,   # SteamTools固定版本模式（默认启用）
     "ST_Fixed_Manifest_Mode": "ask",  # 固定版本manifest修复模式: always/never/ask
     "patch_manifest_default": False,    # 默认是否修补manifest
+    "disclaimer_agreed": False,         # 是否已确认首次启动的免责声明
+    "disclaimer_declined": False,       # 用户曾拒绝免责声明（下次启动会重新弹出）
+    "OpenSteamTool_Mirror": "",         # OpenSteamTool 压缩包自定义镜像直链（留空用内置源）
+    "OpenSteamTool_Local_Zip": "",      # 本地兜底压缩包路径（留空则找 config/ost_release.zip）
     "QA1": "温馨提示: Github_Personal_Token(个人访问令牌)可在Github设置的最底下开发者选项中找到, 详情请看教程。",
     "QA2": "Force_Unlocker: 强制指定解锁工具, 填入 'steamtools'、'greenluma' 或 'opensteamtools'。留空则自动检测。",
     "QA3": "Custom_Repos: 自定义清单库配置。github数组用于添加GitHub仓库，zip数组用于添加ZIP清单库。",
     "QA4": "GitHub仓库格式: {\"name\": \"显示名称\", \"repo\": \"用户名/仓库名\"}",
-    "QA5": "ZIP清单库格式: {\"name\": \"显示名称\", \"url\": \"下载URL，用{app_id}作为占位符\"}"
+    "QA5": "ZIP清单库格式: {\"name\": \"显示名称\", \"url\": \"下载URL，用{app_id}作为占位符\"}",
+    "QA6": "OpenSteamTool_Mirror / OpenSteamTool_Local_Zip: 上游仓库失效时的备用来源，分别填镜像直链与本地 zip 路径。"
 }
+
+# 上游 OpenSteamTool 不可用时的报错：必须给出可操作的自救路径，
+# 否则用户只会看到「初始化失败」而无从下手。
+_OST_UNAVAILABLE_HINT = (
+    "获取 OpenSteamTool 失败（上游仓库可能已失效，或网络不可达）。\n\n"
+    "可任选一种方式绕过：\n"
+    "① 手动下载 OpenSteamTool 的 Release.zip，放到 config/ost_release.zip，重试即可；\n"
+    "② 在 config/config.json 里把 OpenSteamTool_Mirror 填成镜像直链。"
+)
 
 # --- 模块级游戏名称缓存（跨实例共享，避免重复请求）---
 _global_name_cache: Dict[str, str] = {}
@@ -742,18 +756,58 @@ class CaiBackend:
                 continue
         return {}
 
-    async def download_ost_zip(self, asset_url: str, dest: Path) -> bool:
-        """下载 OpenSteamTool 压缩包到 dest（支持镜像重试），返回是否成功。"""
-        repo = "OpenSteam001/OpenSteamTool"
-        urls = [asset_url]
+    def _ost_local_zip(self) -> Optional[Path]:
+        """本地兜底压缩包：配置 OpenSteamTool_Local_Zip 优先，其次约定路径 config/ost_release.zip。
+
+        上游仓库失效时，这是唯一不依赖任何网络的出路。
+        """
+        candidates: List[Path] = []
         try:
-            if await self.checkcn():
-                urls = [f"https://gh-proxy.org/{asset_url}",
-                        f"https://cdn.gh-proxy.org/{asset_url}",
-                        f"https://edgeone.gh-proxy.org/{asset_url}",
-                        f"https://ghp.ci/{asset_url}"] + urls
+            custom = str(self.config.get('OpenSteamTool_Local_Zip') or '').strip()
+            if custom:
+                candidates.append(Path(custom))
         except Exception:
             pass
+        candidates.append(self.project_root / 'config' / 'ost_release.zip')
+        for p in candidates:
+            try:
+                if p.is_file() and p.stat().st_size > 0:
+                    return p
+            except Exception:
+                continue
+        return None
+
+    async def _ost_zip_urls(self, asset_url: str) -> List[str]:
+        """OpenSteamTool 压缩包下载候选，按优先级排列。
+
+        注意：gh-proxy 系列只是 github.com 的**网络代理**——上游仓库被删除或改名时
+        它们同样返回 404，不构成可用性兜底。真正的兜底是自定义镜像与本地 zip，
+        所以自定义镜像排在最前，且原样使用（不套 gh-proxy）。
+        """
+        urls: List[str] = []
+        try:
+            custom = str(self.config.get('OpenSteamTool_Mirror') or '').strip()
+            if custom:
+                urls.append(custom)
+        except Exception:
+            pass
+        proxies = [
+            f"https://gh-proxy.org/{asset_url}",
+            f"https://cdn.gh-proxy.org/{asset_url}",
+            f"https://edgeone.gh-proxy.org/{asset_url}",
+            f"https://ghp.ci/{asset_url}",
+        ]
+        try:
+            cn = await self.checkcn()
+        except Exception:
+            cn = False
+        # 国内代理优先（直连大概率被墙）；海外直连优先，代理仅作兜底
+        urls += proxies + [asset_url] if cn else [asset_url] + proxies
+        return urls
+
+    async def download_ost_zip(self, asset_url: str, dest: Path) -> bool:
+        """下载 OpenSteamTool 压缩包到 dest（支持镜像重试），返回是否成功。"""
+        urls = await self._ost_zip_urls(asset_url)
         for url in urls:
             try:
                 async with self.client.stream("GET", url, timeout=120, follow_redirects=True) as r:
@@ -774,8 +828,9 @@ class CaiBackend:
     async def install_opensteamtool(self, steam_path: Path) -> Dict:
         """初始化 OpenSteamTool：
         1. 已存在 opensteamtool.toml → 返回 already=True，不重复下载
-        2. 下载最新 Release zip 解压到 Steam 根目录
-        3. 写 opensteamtool.toml
+        2. 优先用本地兜底 zip（配置 OpenSteamTool_Local_Zip 或 config/ost_release.zip）
+        3. 否则在线下载最新 Release zip 解压到 Steam 根目录
+        4. 写 opensteamtool.toml
         """
         steam_path = Path(steam_path)
         toml_path = steam_path / 'opensteamtool.toml'
@@ -783,16 +838,28 @@ class CaiBackend:
             self.log.info("opensteamtool.toml 已存在，跳过初始化下载")
             return {"success": True, "already": True}
 
-        release = await self.fetch_ost_latest_release()
-        if not release:
-            return {"success": False, "message": "获取 OpenSteamTool 最新版本信息失败"}
-
         import tempfile
         tmp_dir = Path(tempfile.mkdtemp(prefix='ost_'))
         try:
-            zip_path = tmp_dir / release['asset_name']
-            if not await self.download_ost_zip(release['asset_url'], zip_path):
-                return {"success": False, "message": "下载 OpenSteamTool 压缩包失败（请检查网络）"}
+            # ① 本地兜底 zip 优先：上游仓库失效时，这是唯一不依赖网络的出路
+            local_zip = self._ost_local_zip()
+            if local_zip:
+                zip_path = tmp_dir / local_zip.name
+                try:
+                    shutil.copy2(local_zip, zip_path)
+                except Exception as e:
+                    return {"success": False, "message": f"读取本地压缩包失败: {e}"}
+                ost_version = 'local'
+                self.log.info(f"使用本地兜底压缩包初始化 OpenSteamTool: {local_zip}")
+            else:
+                # ② 在线获取（自定义镜像 → 直连/gh-proxy 按网络环境排序）
+                release = await self.fetch_ost_latest_release()
+                if not release:
+                    return {"success": False, "message": _OST_UNAVAILABLE_HINT}
+                zip_path = tmp_dir / release['asset_name']
+                if not await self.download_ost_zip(release['asset_url'], zip_path):
+                    return {"success": False, "message": _OST_UNAVAILABLE_HINT}
+                ost_version = release['version']
 
             try:
                 with zipfile.ZipFile(zip_path) as zf:
@@ -812,8 +879,8 @@ class CaiBackend:
                 return {"success": False, "message": f"解压失败: {e}"}
 
             toml_path.write_text('[manifest]\n\nurl = "wurm"\n', encoding='utf-8')
-            self.log.info(f"OpenSteamTool 初始化完成，版本 {release['version']}")
-            return {"success": True, "already": False, "version": release['version']}
+            self.log.info(f"OpenSteamTool 初始化完成，版本 {ost_version}")
+            return {"success": True, "already": False, "version": ost_version}
         finally:
             shutil.rmtree(tmp_dir, ignore_errors=True)
 

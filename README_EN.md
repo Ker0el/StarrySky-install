@@ -6,7 +6,7 @@ Steam game library tool — **Find any game, unlock with one click, play right a
 
 Modern Fluent Design · Multiple unlockers · Whole-internet resource search
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-4B8BBE) ![License](https://img.shields.io/badge/License-MIT-green) ![Platform](https://img.shields.io/badge/Windows-11%20%2F%2010-0078D6) ![Version](https://img.shields.io/badge/Release-v1.9-blue)
+![Python](https://img.shields.io/badge/Python-3.8%2B-4B8BBE) ![License](https://img.shields.io/badge/License-NonCommercial-orange) ![Platform](https://img.shields.io/badge/Windows-11%20%2F%2010-0078D6) ![Version](https://img.shields.io/badge/Release-v1.9-blue)
 
 [中文版](./README.md) | **English**
 
@@ -56,6 +56,12 @@ python main.py
 
 This tool is provided for learning and research purposes only. Do not use it for commercial or illegal purposes. Users assume all risks and consequences arising from the use of this tool. Please support official releases.
 
+This software's source code is public and it is free of charge; all features are unconditionally available. Tips are purely voluntary and unrelated to functionality. Reselling or paid redistribution is prohibited.
+
+> This project is not sold on any platform. If you **paid** for it, you were scammed — please request a refund.
+
+**This project provides no paid services, paid support, or after-sales service.** Any party charging money under this project's name has no connection to the author.
+
 ## 📄 License
 
-[MIT](LICENSE)
+[StarrySky Install License](./LICENSE) — personal study and research use, copying, modification, and distribution with attribution are permitted; **commercial use, resale, and paid redistribution are prohibited**. The software is provided "AS IS", without warranty of any kind.

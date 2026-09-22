@@ -5,4 +5,5 @@ dist/
 build/
 logs/
 config/name_cache.json
+config/ost_release.zip
 assets/gbe/*.dll

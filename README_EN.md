@@ -6,7 +6,7 @@ Steam game library tool — **Find any game, unlock with one click, play right a
 
 Modern Fluent Design · Multiple unlockers · Whole-internet resource search
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-4B8BBE) ![License](https://img.shields.io/badge/License-NonCommercial-orange) ![Platform](https://img.shields.io/badge/Windows-11%20%2F%2010-0078D6) ![Version](https://img.shields.io/badge/Release-v1.9-blue)
+![Python](https://img.shields.io/badge/Python-3.8%2B-4B8BBE) ![License](https://img.shields.io/badge/License-NonCommercial-orange) ![Platform](https://img.shields.io/badge/Windows-11%20%2F%2010-0078D6) ![Version](https://img.shields.io/badge/Release-v1.9.1-blue)
 
 [中文版](./README.md) | **English**
 

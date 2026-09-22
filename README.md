@@ -6,7 +6,7 @@ Steam 游戏入库工具 — **什么游戏都能搜到，一键入库即玩**
 
 现代 Fluent Design · 多解锁器 · 全网资源搜索
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-4B8BBE) ![License](https://img.shields.io/badge/License-NonCommercial-orange) ![Platform](https://img.shields.io/badge/Windows-11%20%2F%2010-0078D6) ![Version](https://img.shields.io/badge/Release-v1.9-blue)
+![Python](https://img.shields.io/badge/Python-3.8%2B-4B8BBE) ![License](https://img.shields.io/badge/License-NonCommercial-orange) ![Platform](https://img.shields.io/badge/Windows-11%20%2F%2010-0078D6) ![Version](https://img.shields.io/badge/Release-v1.9.1-blue)
 
 **简体中文** | [English](./README_EN.md)
 

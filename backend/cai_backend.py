@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Tuple, Any, List, Dict, Literal, Optional
 from urllib.parse import quote
 
-CURRENT_VERSION = "1.9.0"  # 当前版本号
+CURRENT_VERSION = "1.9.1"  # 当前版本号
 GITHUB_REPO = "Ker0el/StarrySky-install"
 # --- LOGGING SETUP ---
 LOG_FORMAT = '%(log_color)s%(message)s'
